@@ -1,0 +1,171 @@
+{%extends 'sellers/top.html'%}
+{% block content %}
+
+
+<!--폼 안에다가 입력해줘야한다. (안써주면 에러발생), csrf_token 폼의 경우에는 , 데이터를 서버에 전달하는 기능.이때 암호화된 키를 숨겨놓아 크로스도메인을 막기 위함. -->
+<!-- bootstrap -component - forms -->
+
+
+
+<article class="container">
+    <div style="text-align:center">
+        <div class="top_menu">
+            <p>회원가입</p>
+        </div>
+    </div>
+    <br><br>
+    <!--페이지에서 독립적-->
+    <form method="POST" action="{%url 'sellers_signup'%}">
+        <div class="text_style">
+            <p>
+                <tr>
+                    <td>
+                        <table width="100%" cellpadding="20" cellspacing="20" border="0">
+
+                            {% csrf_token %}
+                            <tr>
+                                <div class="form-group">
+                                    <td style="color:black; font-size:1em; padding:20px" align="center">아이디</td>
+                                    <td width="*">
+                                        <input type="text" class="form-control" id="ID" name="ID" style="width:400px">
+                                    </td>
+                                </div>
+                            </tr>
+                            <tr>
+                                <div class="form-group">
+                                    <td style="color:black; font-size:1em; padding:20px" align="center">비밀번호</td>
+                                    <td width="*">
+                                        <font size="2em">
+                                            <input type="password" class="form-control" id="password" name="password"
+                                                style="width:400px">(영문 대소문자/숫자/특수문자 중 2가지 이상 조합, 10자~16자)</font>
+                                    </td>
+                                </div>
+                            </tr>
+
+                            <tr>
+                                <div class="form-group">
+                                    <td style="color:black; font-size:1em; padding:20px" align="center">비밀번호 확인</td>
+                                    <td width="*">
+                                        <input type="password" class="form-control" id="re_password" name="re_password"
+                                            style="width:400px">
+                                    </td>
+                                </div>
+                            </tr>
+
+                            <tr>
+                                <div class="form-group">
+                                    <td style="color:black; font-size:1em; padding:20px" align="center">회사명</td>
+                                    <td width="*">
+                                        <input type="text" class="form-control" id="companyname" name="companyname" style="width:400px; ">
+                                    </td>
+                                </div>
+                            </tr>
+
+                            <tr>
+                                <div class="form-group">
+                                    <td style="color:black; font-size:1em; padding:20px" align="center">사업자 등록번호</td>
+                                    <td width="*">
+                                        <input type="text" class="form-control" id="corporate_number" name="corporate_number"
+                                            style="width:400px; ">
+                                    </td>
+                                </div>
+                            </tr>
+
+                            <tr>
+                                <div class="form-group">
+                                    <td style="color:black; font-size:1em; padding:20px" align="center">회사 전화번호</td>
+                                    <td width="*">
+                                        <input type="text" class="form-control" id="number" name="number"
+                                            style="width:400px">
+                                    </td>
+                                </div>
+                            </tr>
+
+                            <tr>
+                                <div class="form-group">
+                                    <td style="color:black; font-size:1em; padding:20px" align="center">회사 이메일</td>
+                                    <td width="*">
+                                        <input type="text" class="form-control" id="e_mail" name="e_mail"
+                                            style="width:400px">
+                                    </td>
+                                </div>
+                            </tr>
+                            <tr>
+                                <td style="color:black; font-size:1em; padding:20px" align="center">회사 주소</td>
+                                <td width="*" padding="20px" align="left">
+                                    <input type="text" id="postcode" name="postcode" placeholder="우편번호"
+                                        readonly="readonly" style="width:400px; height:30px; " maxlength="20" />
+                                    <input type="button" onclick="execDaumPostcode()" value="우편번호 찾기"><br>
+                                    <input type="text" id="address1" name="address1" readonly="readonly"
+                                        placeholder="주소" style="width:400px;  height:30px;" maxlength="20" />
+                                    <input type="text" id="address2" name="address2" placeholder="상세주소"
+                                        style="width:400px;  height:30px;" maxlength="20" />
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </div>
+        </p>
+        {% if messages %}
+            {% for message in messages %}
+                <div class="row" style="text-align:center">
+                <div class="col-sm-6" style="text-align:center">
+                    <div class="alert alert-danger" style="text-align:center">
+                    <strong>{{ message.tags }}!</strong> {{ message.message }}
+                    </div>
+                </div>
+                </div>
+            {% endfor %}
+        {% endif %}
+            <br><br>
+            <div align="center">
+                <button type="submit" class="btn btn-dark"><p style="font-size:1.5em">회원가입</p></button>
+                <button type="button" class="btn btn-light" onclick="location.href='/' "><p style="font-size:1.5em">가입취소</p></button>
+        </div>
+    </form>
+    <br><br>
+</article>
+
+
+
+<script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
+<script>
+    function execDaumPostcode() {
+        new daum.Postcode({
+            oncomplete: function (data) {
+                // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+                // 각 주소의 노출 규칙에 따라 주소를 조합한다.
+                // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+                var fullAddr = ''; // 최종 주소 변수
+                var extraAddr = ''; // 조합형 주소 변수
+                // 사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
+                if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
+                    fullAddr = data.roadAddress;
+                } else { // 사용자가 지번 주소를 선택했을 경우(J)
+                    fullAddr = data.jibunAddress;
+                }
+                // 사용자가 선택한 주소가 도로명 타입일때 조합한다.
+                if (data.userSelectedType === 'R') {
+                    //법정동명이 있을 경우 추가한다.
+                    if (data.bname !== '') {
+                        extraAddr += data.bname;
+                    }
+                    // 건물명이 있을 경우 추가한다.
+                    if (data.buildingName !== '') {
+                        extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+                    }
+                    // 조합형주소의 유무에 따라 양쪽에 괄호를 추가하여 최종 주소를 만든다.
+                    fullAddr += (extraAddr !== '' ? ' (' + extraAddr + ')' : '');
+                }
+                // 우편번호와 주소 정보를 해당 필드에 넣는다.
+                document.getElementById('postcode').value = data.zonecode; //5자리 새우편번호 사용
+                document.getElementById('address1').value = fullAddr;
+                // 커서를 상세주소 필드로 이동한다.
+                document.getElementById('address2').focus();
+            }
+        }).open();
+    }
+</script>
+
+{% endblock %}

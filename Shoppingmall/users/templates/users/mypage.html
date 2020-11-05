@@ -1,0 +1,28 @@
+{%extends 'users/mypage_sidebar.html'%}
+
+{% block content2 %}
+
+<article class="container">
+    <div style="text-align:center">
+        <div class="top_menu">
+            <p>마이페이지</p>
+        </div>
+    </div>
+    <br><br>
+    <!--페이지에서 독립적-->
+    <div class="col-xs-6 col-md-3">
+        <h2>{{myuser_info.username}}님 안녕하세요</h2>
+
+        <h4> 아이디 : {{myuser_info.userID}} <br>
+             사용자명 : {{myuser_info.username}} <br>
+             우편번호 : {{myuser_info.postcode}} <br>
+             주소 : {{myuser_info.address}} <br>
+             전화번호 : {{myuser_info.phone}} <br>
+             이메일 : {{myuser_info.e_mail}} <br>
+        </h4>
+        <a><button type="button" class="btn btn-dark">프로필 편집</button></a>
+    </div>
+
+</article>
+{% endblock %}
+

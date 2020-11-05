@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!--정적 파일 실행-->
+    {% load static %}
+    <link
+      rel="stylesheet"
+      href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"
+    />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&display=swap"
+      rel="stylesheet"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css"
+    />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.6/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" href="{% static 'css/users.css' %}" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css"
+    />
+
+    <script
+      src="{% static 'js/users.js' %}"
+      type="text/javascript"
+      defer
+    ></script>
+    <title>폼나냥</title>
+  </head>
+  <body>
+    <div class="navbar">
+      <div class="navbar_menu" style="font-size: 1.25em;">
+        {% if request.session.user %}
+        <li><a href="/logout">LOGOUT</a></li>
+        <li><a href="/mypage">MYPAGE</a></li>
+        <li><a href="/cart/{{request.session.user}}">CART</a></li>
+        {% else %}
+        <li><a href="/login">LOGIN</a></li>
+        <li><a href="/signup">JOIN</a></li>
+        <li>
+          <a onClick="alert('구매자 로그인이 필요합니다')">MYPAGE</a>
+        </li>
+        <li>
+          <a onClick="alert('구매자 로그인이 필요합니다')">CART</a>
+        </li>
+
+        {% endif %}
+
+        <li><a href="/notice">NOTICE</a></li>
+      </div>
+      <!--클릭하면 메인 홈페이지로 가는 것을 방지하기 위해 # 넣어줌-->
+      <a href="#" class="navbar__toggleBtn">
+        <i class="fas fa-bars"></i>
+      </a>
+    </div>
+
+    <a
+      class="nav-link"
+      href="/"
+      style="
+        font-family: 'Black Han Sans', sans-serif;
+        color: black;
+        text-align: center;
+        font-size: 35px;
+      "
+      >폼나냥</a
+    >
+    <br /><br />
+    <div class="container-fluid">
+      <ul class="nav nav-tabs">
+        {% for category in allcategory%}
+        <li class="nav-item">
+          <a class="nav-link" href="/category/{{category.name}}"
+            ><span style="color: black; font-size: 1.5em;"
+              >{{category.name}}</span
+            >
+            <br />
+          </a>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <br /><br />
+    {% block content %} {% endblock %}
+  </body>
+
+  <hr style="width: 100%;" />
+  <div style="padding: 30px 110px 30px 120px; font-size: 1.5em;">
+    <a style="font-weight: bold;">제이엠스마트 주식회사</a><br />
+    대표 : 문 일 용<br />
+    주소 : 서울시 강남구 봉은사로 448 지웰 2층<br />
+    사업자 등록번호 : 120-87-83572 (사업자정보확인)<br />
+    통신판매업신고번호 : 2016-서울강남-02425호<br />
+    전화 : 02-6925-1718<br />
+    이메일 : eric.moon@jmsmart.co.kr
+  </div>
+</html>

@@ -1,0 +1,57 @@
+{%extends 'users/product.html'%}
+
+
+{% block content %}
+
+
+<body >
+  {%block button%}
+  {% if products == None %}
+
+  <script>
+    alert('등록된 상품이 없습니다.');
+  </script>
+
+  {%else%}
+
+  <div style="margin: 0 100px 0px 100px;">
+
+    <select id="sort-select" onchange="location = this.value;">
+      <option value="none">===정렬방식===</option>
+      <option class="sort-date" value="?sort=date">신상품</option>
+      <option class="sort-view" value="?sort=view">인기상품</option>
+      <option class="sort-low_price" value="?sort=low_price">낮은가격</option>
+      <option class="sort-high_price" value="?sort=high_price">높은가격</option>
+    </select>
+
+  <form method="POST"    enctype="multipart/form-data">
+
+    <!-- 카테고리 : S -->
+        <br><br>
+    <div class="row">
+
+      {% for product in products %}
+
+      <div class="col-md-3 text-center">
+        <a href='/category/{{product.category}}/{{product.name}}' >
+          <img class ="img-responsive img-center" src = "{{ product.image.url }}" />
+        </a>
+        <br>
+
+        <b>{{product.name}}</b><br>
+        {{product.price}}원
+        </div>
+
+        <br><br>
+      {% endfor %}
+
+<br><br>
+</form>
+  </div>
+</body>
+
+{%endif%}
+{% endblock %}
+
+
+{% endblock %}

@@ -1,0 +1,60 @@
+{%extends 'sellers/top.html'%}
+{% block content %}
+
+<!-- <article class="container">
+  <div class="right-box">
+    등록날짜 : {{product.upload_date|date:'Y-m-d H:i'}}
+  </div>
+  <br>
+  <div class="right-box">
+    조회수 : {{product.view}}
+  </div>
+
+  <div class = "row mt-5">
+    <div class = "col-12">
+        <div class = "card" style = "width:100%">
+            <div class = "card-body">
+                <h3>상품 제목 : {{product.name}}</h3>
+            </div>
+            <ul class = "list-group list-group-flush">
+                <li class = "list-group-item">상품 가격 : {{ product.price}} 원</li>
+                <li class = "list-group-item">남은 수량 : {{ product.stock}}</li>
+                <li class = "list-group-item">등록 날짜 : {{ product.upload_date|date:'Y-m-d H:i'}}</li>
+                <li class = "list-group-item">{{ product.description|safe }} </li>
+            </ul>
+        </div>
+    </div>
+</div>
+</article> -->
+<div style="padding: 30px 110px 30px 120px;">
+<div class="right-box">
+  등록날짜 : {{product.upload_date|date:'Y-m-d H:i'}}
+</div>
+<br>
+<div class="right-box">
+  조회수 : {{product.view}}
+</div>
+</div>
+
+<div class="list-group list-group-flush">
+
+  <div style="padding: 30px 110px 30px 120px;">
+    <h1> 상품 이름 : {{product.name}} </h1><br>
+    <h1> 상품 분류 : {{product.category}} </h1><br>
+    
+    <p><h1>대표 사진</h1> <img src = "{{product.image.url}}" height="300" width="300"> </p>
+    <h1>상품 가격 : {{product.price}}</h1><br>
+    <p><h1>상품 설명</h1> {{product.description|safe}}</p><br>
+    <h1>상품 수량 : {{product.stock}} </h1><br>
+    <br><br>
+</div>
+</div>
+ 
+<div align="center">
+  <button type="button" class="btn btn-dark"><a href="{% url 'edit' product.category product.name %}"><p style="font-size:1.5em">수정</p></button>
+
+  <button type="button" class="btn btn-primary"><a href="{% url 'delete' product.category product.name %}"><p style="font-size:1.5em">삭제</p></button>
+  </div>
+</div>
+
+{% endblock %}

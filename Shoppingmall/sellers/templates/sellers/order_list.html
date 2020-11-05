@@ -1,0 +1,111 @@
+{% extends "sellers/top.html" %}
+
+{% block content %}
+  <style>
+    #ordering ul li{
+        list-style:none;
+        margin:0px 20px 0 -10px;
+        padding:10px 0;
+        border-bottom:1px solid#999;
+    }
+    #ordering ul li::after{
+        content:'';
+        display:block;
+        clear:both;
+    }
+    #ordering div.thumb{
+        float:left;
+        width:250px;
+    }
+    #ordering div.gdsInfo{
+        float:right;
+        width:calc(100%);
+        font-size:13px;
+        line-height:2;
+    }
+    #ordering div.gdsInfo span{
+        display:inline-block;
+        width:100px;
+        font-weight:bold;
+        margin-right:10px;
+    }
+    #ordering div.gdsInfo .delete{
+        text-align:right;
+    }
+    #ordering div.gdsInfo .delete button{
+        font-size:12px;
+        padding:5px 10px;
+        border:1px solid #eee;
+        background:#eee;
+    }
+
+
+    .allCheck { font-size:11px; float:left; width:200px; }
+    .allCheck input { width:16px; height:16px; }
+    .allCheck label { margin-left:10px; }
+    .delBtn { float:right; width:300px; text-align:right; }
+    .delBtn button { font-size:11px; padding:5px 10px; border:1px solid #eee; background:#eee;}
+
+    .checkBox { float:left; width:30px; }
+    .checkBox input { width:16px; height:16px; }
+</style>
+{% load mathfilters %}
+<main>
+
+    <h3 style="font-weight:bold">주문/배송현황</h3>
+    <br><br>
+        <a>최근 주문한 상품의 배송 현황입니다. 과거에 배송 완료된 주문은 MYPAGE의 '구매내역'에서 확인바랍니다.</a>
+    <br><br>
+
+    <section id ="ordering">
+        <ul>
+            {% for oitem in orders %}
+                <li>
+                    <div class="gdsInfo">
+                        <table>
+                        <tr>
+                             <td width="10%" align="center" bgcolor="#EEEEEE" class="list2_tit">대표 이미지</td>
+                            <td width="10%" align="center" bgcolor="#EEEEEE" class="list2_tit">주문내역</td>
+                             <td width="10%" align="center" bgcolor="#EEEEEE" class="list2_tit">주문번호</td>
+                             <td width="10%" align="center" bgcolor="#EEEEEE" class="list2_tit">구매날짜</td>
+                             <td width="10%" align="center" bgcolor="#EEEEEE" class="list2_tit">결제가격</td>
+                             <td width="10%" align="center" bgcolor="#EEEEEE" class="list2_tit">주문상황</td>
+                        </tr>
+                        <tr>
+                             <td align="center"> <a href = "{{ oitem.main_item.image.url }}"><img class ="img-responsive img-center" src = "{{ oitem.main_item.image.url }}" width="150" height="150"/></a></td>
+                            {% if oitem.purchase_count > 1 %}
+                            <td width="10%" align="center" ><a href = "/sellers/mypage/order_detail/{{oitem.order_code}}">{{ oitem.main_item.name }} 외 {{ oitem.purchase_count|sub:1}}개</a></td>
+                            {% else %}
+                            <td width="10%" align="center" ><a href = "/sellers/mypage/order_detail/{{oitem.order_code}}">{{ oitem.main_item.name }} </a></td>
+                            {% endif %}
+                             <td width="10%" align="center" >{{ oitem.main_order.order_code }}</td>
+                             <td width="10%" align="center">{{ oitem.main_order.order_date }}</td>
+                             <td width="10%" align="center">{{ oitem.purchase_price }}</td>
+                             <td width="10%" align="center" >{{ oitem.main_order.order_state }}</td>
+                        </tr>
+                        </table>
+
+                        <div class="delete">
+                            <!--주문 상세보기-->
+                            <button type="button" class="delete_btn" onclick="location.href='/sellers/mypage/order_detail/{{oitem.order_code}}'">주문 및 결제 상세보기</button>
+                            <!--배송조회-->
+                            <button type="button" class="delete_btn" data-cartNum="{{oitem.id}}">상태수정 및 송장입력</button>
+                        </div>
+                    </div>
+                </li>
+                {% if oitem is none %}
+                    <li >
+                    <span >Your Ordering Product is empty</span>
+                </li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+
+
+    </section>
+
+
+</main>
+
+
+{% endblock content %}

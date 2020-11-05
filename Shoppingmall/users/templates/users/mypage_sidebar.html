@@ -1,0 +1,70 @@
+{%extends 'users/top.html'%}
+{% block content %}
+<style>
+    #tab-container
+    {
+       float: left;
+       width: 150px;
+       margin: 0 0 0 -20px
+    }
+    
+    #tab-container ul
+    {
+       list-style: none;
+       text-align: center;
+    }
+    #tab-container ul li
+    {
+       border-right: 1px solid #BDBDBD;
+       border-bottom: 1px solid #BDBDBD;
+    }
+    #tab-container ul li a,
+    #tab-container ul li a:visited
+    {
+       text-decoration: none;
+       color: black;
+       text-size: 1.25em;
+       display: block;
+       padding: 15px 5px;
+    }
+    #tab-container ul li:hover
+    {
+        background-color : #BDBDBD;
+        color: white;
+    }
+    #tab-container ul li a:hover
+    {
+       color: white;
+       font-weight: bold;
+    }
+    #tab-container ul li.selected
+    {
+       border-right: none;
+       background-color: #F2F2F2;
+       font-weight: bold;
+
+    }
+    #main-container
+    {
+       min-height: 400px;
+       margin: 0 80px 0  149.5px;
+       padding: 20px;
+       border: 1px solid #F2F2F2;
+    }
+ </style>
+  <div id="content">
+   <div id="tab-container">
+      <ul>
+         <li class="selected"><a href="/mypage">회원 정보</a></li>
+         <li><a href="/order_list/{{request.session.user}}">주문/배송현황</a></li>
+
+      </ul>
+   </div>
+   <div id="main-container">
+       {%block content2%}
+       {%endblock%}
+   </div>
+</div>
+
+{% endblock %}
+

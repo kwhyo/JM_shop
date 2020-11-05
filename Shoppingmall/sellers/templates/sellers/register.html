@@ -1,0 +1,178 @@
+{%extends 'sellers/top.html'%}
+{% block content %}
+
+<!--폼 안에다가 입력해줘야한다. (안써주면 에러발생), csrf_token 폼의 경우에는 , 데이터를 서버에 전달하는 기능.이때 암호화된 키를 숨겨놓아 크로스도메인을 막기 위함. -->
+<!-- bootstrap -component - forms -->
+<script type="text/javascript">
+    function inputNumberAutoComma(obj) {
+       
+        // 콤마( , )의 경우도 문자로 인식되기때문에 콤마를 따로 제거한다.
+        var deleteComma = obj.value.replace(/\,/g, "");
+
+        // 콤마( , )를 제외하고 문자가 입력되었는지를 확인한다.
+        if(isFinite(deleteComma) == false) {
+            alert("문자는 입력하실 수 없습니다.");
+            obj.value = "";
+            return false;
+        }
+       
+        // 기존에 들어가있던 콤마( , )를 제거한 이 후의 입력값에 다시 콤마( , )를 삽입한다.
+        obj.value = inputNumberWithComma(inputNumberRemoveComma(obj.value));
+    }
+   
+    // 천단위 이상의 숫자에 콤마( , )를 삽입하는 함수
+    function inputNumberWithComma(str) {
+
+        str = String(str);
+        return str.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, "$1,");
+    }
+
+    // 콤마( , )가 들어간 값에 콤마를 제거하는 함수
+    function inputNumberRemoveComma(str) {
+
+        str = String(str);
+        return str.replace(/[^\d]+/g, "");
+    }
+</script>
+
+<!--<article class="container">
+    <div style="text-align:center">
+        <div class="top_menu">
+            <p>상품 등록</p>
+        </div>
+    </div>
+    <br><br>
+
+    <form method="POST" action="{%url 'register'%}" enctype = "multipart/form-data">
+        {% csrf_token %}
+        <div class="text_style">
+            <p>
+                <tr>
+                    <td>
+                        <table>
+                            <tr>
+                                <div class="form-group">
+                                    <td align="center">상품명</td>
+                                    <td>
+                                        <input type="text" class="form-control" id="name" name="name" style="width:800px">
+                                        <br>
+                                    </td>
+                                </div>
+                            </tr>
+                            <tr>
+                                <div class="form-group">
+                                    <td align="center">판매자</td>
+                                    <td>
+                                        {{myseller_id}}
+                                        <br>
+                                    </td>
+                                </div>
+                            </tr>
+                            <tr>
+                                <div class="form-group">
+                                    <td align="center">카테고리</td>
+                                    <td>
+                                        <select name ="selectcategory"  >
+                       
+                                            <option value="hello">== 카테고리선택 ===</option>
+                                            {% for category in allcategory %}
+                                            <option value= "{{category.name}}">{{category.name}} </option>
+                                            {%endfor%}
+                                        </select>                                        
+                                     
+                                    </td>
+                                </div>
+                            </tr>
+                            <tr>
+                                <div class="form-group">
+                                    <td align="center">상품사진</td>
+                                    <td>
+                                        <input type = "file" class="form-control" id="image" name="image"
+                                        style="widows: 200px" accept=".png, .jpeg, .jpg">
+                                        <br>
+                                    </td>
+                                </div>
+                            </tr>
+                            <tr>
+                                <div class="form-group">
+                                    <td align="center">상세사진</td>
+                                    <td>
+                                        <input type = "file" class="form-control" id="detail_image" name="detail_image"
+                                        style="widows: 200px" accept=".png, .jpeg, .jpg" multiple>
+                                        <br>
+                                    </td>
+                                </div>
+                            </tr>
+                            <tr>
+                                <div class="form-group">
+                                    <td align="center">상품가격</td>
+                                    <td>
+                                        <input type="text" 
+                                        onKeyup="inputNumberAutoComma(this);"
+                                        class="form-control" id="price" name="price"
+                                        style="width:200px">
+                                        <br>
+                                    </td>
+                                </div>
+                            </tr>
+                            <tr>
+                                <div class="form-group">
+                                    <td align="center">상품 설명</td>
+									<td>
+										<input type="text"
+										class="form-control"
+										name="description"
+										id = "description"
+                                        style="height:500px;width: 800px;">
+                                        <br>
+                                    </td>
+                                    
+								</div>
+                            </tr>
+
+                            <tr>
+                                <div class="form-group">
+                                    <td align="center">재고</td>
+                                    <td>
+                                        <input type="integer" class="form-control" id="stock" name="stock"
+                                        style="width:200px">
+                                        <br>
+                                    </td>
+                                </div>
+                            </tr>                   
+                        </table>
+                    </td>
+                </tr>
+            </div>
+        </p>
+            <br><br>
+            <div align="center">
+                <button type="submit" class="btn btn-dark"><p style="font-size:1.5em">등록</p></button>
+                <button type="button" class="btn btn-light" onclick="location.href='/sellers' "><p style="font-size:1.5em">취소</p></button>
+        </div>
+    </form>
+
+
+    <br><br>
+</article>-->
+<div class = "row mt-5">
+    <div class = "col-12 text-center">
+        <h1>상품 등록</h1>
+    </div>
+</div>
+
+<div class = "container">
+    <form method ="POST" action="" enctype="multipart/form-data" >
+    {% csrf_token %}
+    {{form.media}}
+    {{form.as_p}}
+                
+    <br><br>
+    <div align="center">
+        <button type="submit" class="btn btn-dark"><p style="font-size:1.5em">등록</p></button>
+        <button type="button" class="btn btn-light" onclick="location.href='/sellers/mypage/productlist' "><p style="font-size:1.5em">취소</p></button>
+    </div>
+    </form>
+</div>
+
+{% endblock %}

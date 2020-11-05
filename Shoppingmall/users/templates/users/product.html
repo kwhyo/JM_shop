@@ -1,0 +1,163 @@
+{%extends 'users/top.html'%} {% block content %}
+
+<div class="product_list">
+  <div class="col-md-6">
+    <img class="img-responsive img-center" src="{{ product.image.url }}" />
+  </div>
+  <br>
+    <div class="col-md-6">
+      <div style="padding: 0 50px 0 0;"><h4>{{product.name}}</h4></div>
+      <br />
+      <table class="type04">
+        <tr>
+          <th scope="row">판매가</th>
+          <td>{{product.price}}원</td>
+        </tr>
+        <tr>
+          <th scope="row">수량</th>
+          <td>
+            <input
+              class="submit"
+              type="number"
+              id="input"
+              name="quantity"
+              value="1"
+            />
+          </td>
+        </tr>
+        <tr>
+          {% if product.stock == 0 %}
+          <p><strong>재고 상태:</strong>재고 없음</p>
+          {% endif %}
+        </tr>
+
+      </table>
+      {% if request.session.user %}
+
+      <button type="button" class="order" id="order" onclick="input()">
+        <a style="width: 30%; height: 50px; font-size: 150%;">구매하기</a>
+      </button>
+
+      <button type="button" class="cart" id="cart" onclick="addcart()">
+        <a style="width: 30%; height: 50px; font-size: 150%;">장바구니</a>
+      </button>
+      <!--onclick="addcart()" cart="False"-->
+      <script src="http://code.jquery.com/jquery-3.4.1.min.js"></script>
+      <script type="text/javascript">
+        function addcart(){
+          count = document.querySelector('input[name="quantity"]');
+          $('.quantity').attr("cart","True");
+          $.ajax({
+              url: '{%url 'userproduct' category  product  %}',
+              data: { 'item_count' : count.value, 'cart':"True"},
+              success: function (data){
+                  if (data['confirm'] =="ok"){
+                    $('.cart').attr("cart","False");
+                    var UP;
+                    UP =confirm("장바구니에 추가되었습니다. 장바구니로 가시겠습니까?");
+                    if(UP){
+                      location.href="/cart/{{request.session.user}}";
+                    }
+                    else{
+                      return;
+                    }
+                   }
+              }
+          })
+        }
+      </script>
+
+      {% else %}
+      <input
+        type="button"
+        value="구매하기"
+        onclick="location.href='/login' "
+        class="main-btn btn-dark"
+        style="width: 30%; height: 50px; font-size: 150%;"
+      />
+      <input
+        type="button"
+        value="장바구니"
+        class="main-btn"
+        onclick="location.href='/login' "
+        style="width: 30%; height: 50px; font-size: 150%;"
+      />
+      {% endif %}
+      <br>
+    </div>
+</div>
+      <br><br><br><br><br><br><br><br><br><br><br>
+
+
+  <div style="padding: 30px 110px 30px 120px;">
+    <div style="text-align:center">
+      {{product.description|safe}}
+    </div>
+  </div>
+
+      <br><br><br><br><br><br><br><br><br><br><br>
+      <div style="padding: 30px 110px 30px 120px;">
+        <div style="text-align:center">
+          <h2><b>반품교환정보</b></h2>
+        </div>
+        <table class="type04">
+          <tr>
+            <th scope="row">판매자 지정택배사</th>
+            <td>우체국택배</td>
+            <th scope="row">반품 배송비</th>
+            <td>편도 2,500원(최초배송비 무료인 경우 5,000원 부과)</td>
+            <th scope="row">교환배송비</th>
+            <td>5,000원</td>
+            <th scope="row">보내실곳</th>
+            <td>서울특별시 강남구 봉은사로 448(삼성동지웰) 삼성동 지웰타워 2층 (우 : 06153)</td>
+          </tr>
+        </table>
+      </div>
+        <br>
+        <div style="padding: 30px 110px 30px 120px; font-size: 1em;">
+          <b>반품/교환 사유에 따른 요청 가능 기간</b>
+          <br>
+          반품 시 먼저 판매자와 연락하셔서 반품사유, 택배사, 배송비, 반품지 주소 등을 협의하신 후 반품상품을 발송해주시기 바랍니다
+          <br>
+          <b>1</b> 구매자 단순 변심은 상품 수령 후 7일 이내 (구매자 반품배송비 부담)<br>
+          <b>2</b> 표시/광고와 상이, 상품하자의 경우 상품 수령 후 3개월 이내 혹은 표시/광고와 다른 사실을 안 날로부터 30일 이내. 둘 중 하나 경과 시 반품/교환 불가 (판매자 반품배송비 부담)
+          <br>
+          <br>
+          <b>반품/교환 불가능 사유</b>
+          <br>
+          아래와 같은 경우 반품/교환이 불가능합니다.
+          <br>
+          <b>1</b> 반품요청기간이 지난 경우<br>
+          <b>2</b> 구매자의 책임 있는 사유로 상품 등이 멸실 또는 훼손된 경우 (단, 상품의 내용을 확인하기 위하여 포장 등을 훼손한 경우는 제외)<br>
+          <b>3</b> 구매자의 책임있는 사유로 포장이 훼손되어 상품 가치가 현저히 상실된 경우 (예: 식품, 화장품, 향수류, 음반 등)<br>
+          <b>4</b> 구매자의 사용 또는 일부 소비에 의하여 상품의 가치가 현저히 감소한 경우 (라벨이 떨어진 의류 또는 태그가 떨어진 명품관 상품인 경우)<br>
+          <b>5</b> 시간의 경과에 의하여 재판매가 곤란할 정도로 상품 등의 가치가 현저히 감소한 경우<br>
+          <b>6</b> 고객의 요청사항에 맞춰 제작에 들어가는 맞춤제작상품의 경우 (판매자에게 회복불가능한 손해가 예상되고, 그러한 예정으로 청약철회권 행사가 불가능하다는 사실을 서면 동의받은 경우)<br>
+          <b>7</b> 복제가 가능한 상품 등의 포장을 훼손한 경우 (CD/DVD/GAME/도서의 경우 포장 개봉 시)<br>
+          
+      </div>
+
+    <!-- 아래부터 자바스크립트 -->
+    <script type="text/javascript">
+      var temp;
+
+      function input() {
+        var input = document.querySelector('input[name="quantity"]').value;
+        temp = input;
+        window.location.href = "/category/{{product.category}}/{{product.name}}/order_form/"+ temp;
+      }
+
+      function output() {
+        document.getElementById("output").value = temp;
+      }
+    </script>
+
+    <br /><br />
+  </div>
+  <center>
+      <img class="img-responsive img-center" src="{{ product.detail_image.url }}" />
+
+  </center>
+
+  {% endblock %}
+</div>

@@ -1,0 +1,152 @@
+{%extends 'users/top.html'%} {% block content %}
+{% load humanize %}
+<style>
+  .container div {
+    text-align: center;
+  }
+
+  table {
+    width: 80%;
+    border: 1px solid #444444;
+    border-collapse: collapse;
+  }
+
+  th {
+    font-size: 13px;
+    background-color: #eeeeee;
+  }
+
+  td {
+    border: 1px solid #444444;
+    font-size: 13px;
+    padding: 10px;
+  }
+
+  .fix {
+    width: 150px;
+    background-color: #eeeeee;
+    font-weight: bold;
+  }
+
+  input {
+    height: 22px;
+    margin: 3px 0px 3px 0px;
+    border: 1px solid #d4d8d9;
+    line-height: 22px;
+  }
+
+  input::placeholder {
+  color: black;
+}
+
+</style>
+{% load mathfilters %}
+<body>
+<form method="POST" action="{%url 'purchase'%}">
+
+  <div>
+    {% csrf_token %}
+
+    <table width="1000" height="200" align="center" border="1">
+      <thead>
+        <tr align="center" height="40">
+          <p><th colspan="7">주문내역</th></p>
+        </tr>
+        <tr height="40" align="center">
+          <th>이미지</th>
+          <th>상품정보</th>
+          <th>가격</th>
+          <th>수량</th>
+          <th>합계</th>
+        </tr>
+      </thead>
+      {% for product in orderList %}
+      <tr align="center">
+        <td>
+          <img
+            class="img-responsive img-center"
+            width="100px"
+            height="100px"
+            src="{{ product.item.image.url }}"
+          />
+        </td>
+        <td >{{product.item.name}}</td>
+        <td >{{product.item.price|intcomma}}</td>
+        <td >{{product.item_count}}</td>
+        <td style="font-weight: 900; font-size : 15px">{{product.item.price|mul:product.item_count}}원</td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+<br />
+  <div>
+    {% csrf_token %}
+
+    <table width="1000"  align="center" border="1">
+      <thead>
+        <tr  align="center">
+          <th>상품 합계</th>
+          <th>배송비</th>
+          <th>총 결제금액</th>
+        </tr>
+      </thead>
+      <tr align="center">
+        <td id="price">{{item_total_price}}</td>
+        <td>0</td>
+        <td style="font-weight: 900; font-size : 15px" id = "final_price">{{main_order.total_price}}</td>
+      </tr>
+    </table>
+  </div>
+
+  <br /><br /><br>
+
+  <div>
+    <table width="500px" height="200" align="center" border="1">
+      <thead>
+        <tr align="center" height="40">
+          <p><th colspan="7">주문자 정보</th></p>
+        </tr>
+      </thead>
+
+      <tr>
+        <td class="fix">주문하시는 분</td>
+        <td id="buyer_name">
+          {{main_order.user.username}}
+        </td>
+      </tr>
+
+      <tr>
+        <td class="fix">받으시는 분</td>
+        <td>
+          {{main_order.receiver_name}}
+        </td>
+      </tr>
+
+    </table>
+  </div>
+
+  <br><br><br><br>
+  <div>
+    <br><br><br>
+  </div>
+<br><br><br>
+
+<a style="font-weight: 900; font-size : 15px" /><br>
+
+  </div>
+</form>
+
+
+</body>
+
+
+
+<script
+  type="text/javascript"
+  src="https://code.jquery.com/jquery-1.12.4.min.js"
+></script>
+
+
+
+
+{% endblock %}

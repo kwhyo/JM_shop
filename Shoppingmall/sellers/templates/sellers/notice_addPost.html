@@ -1,0 +1,66 @@
+{%extends 'sellers/top.html'%}
+{% block content %}
+
+
+<!--폼 안에다가 입력해줘야한다. (안써주면 에러발생), csrf_token 폼의 경우에는 , 데이터를 서버에 전달하는 기능.이때 암호화된 키를 숨겨놓아 크로스도메인을 막기 위함. -->
+<!-- bootstrap -component - forms -->
+
+
+
+<article class="container">
+    <div style="text-align:center">
+        <div class="top_menu">
+            <p>공지사항 작성</p>
+        </div>
+    </div>
+    <br><br>
+    <!--페이지에서 독립적-->
+    <form method="POST" action="{%url 'notice_addPost'%}">
+        <div class="text_style">
+            <p>
+                <tr>
+                    <td>
+                        <table width="100%" cellpadding="20" cellspacing="20" border="0">
+
+                            {% csrf_token %}
+                            <tr>
+                                <div class="form-group">
+                                    <td style="color:black; font-size:1em; padding:10px 0" align="center">제목</td>
+                                    <td width="*">
+                                        <input type="text" class="form-control" id="TITLE" name="TITLE" style="width:700px">
+                                    </td>
+                                </div>
+                            </tr>
+
+                            <tr>
+                                <div class="form-group">
+                                    <td style="color:black; font-size:1em; padding:10px 0" align="center">작성자 </td>
+                                    <td>{{myseller_id}}</td>
+                                </div>
+                            </tr>
+
+                            <tr>
+                                <div class="form-group">
+                                    <td style="color:black; font-size:1em; padding:20px" align="center">내용</td>
+                                    <td width="*">
+                                        <input type="text" class="form-control" id="CONTENTS" name="CONTENTS" style="width:700px; height:500px">
+                                    </td>
+                                </div>
+                            </tr>
+
+
+                        </table>
+                    </td>
+                </tr>
+            </div>
+        </p>
+            <br><br>
+            <div align="center">
+                <button type="submit" class="btn btn-dark"><p style="font-size:1.5em">공지사항 등록</p></button>
+                <button type="button" class="btn btn-light" onclick="location.href='/sellers/notice' "><p style="font-size:1.5em">이전으로</p></button>
+        </div>
+    </form>
+    <br><br>
+</article>
+
+{% endblock %}

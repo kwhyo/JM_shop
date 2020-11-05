@@ -1,0 +1,119 @@
+{%extends 'users/top.html'%}
+
+{% block content %}
+
+<article class="container">
+    <div style="text-align:center">
+        <div class="top_menu">
+            <p>로그인</p>
+        </div>
+    </div>
+    <br><br>
+
+
+    <div class="container">
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item">
+          <a class="nav-link active" data-toggle="tab" href="#user">구매자 로그인</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" data-toggle="tab" href="#seller">판매자 로그인</a>
+        </li>
+      </ul>
+      <br><br>
+      <div class="tab-content">
+        <div class="container tab-pane active" id="user">
+            <form method="POST" action="{%url 'login'%}">
+                {% csrf_token %}
+                <div class="text_style">
+                    <p>
+                        <tr>
+                            <td>
+                                <table width="100%" cellpadding="20" cellspacing="20" border="0">
+        
+                                    <tr>
+                                        <div class="form-group">
+                                            <td style="color:black; font-size:1em; padding:20px" align="center">아이디</td>
+                                            <td width="*">
+                                                <input type="text" class="form-control" id="ID" name="ID" style="width:400px">
+                                            </td>
+                                        </div>
+                                    </tr>
+                                    <tr>
+                                        <div class="form-group">
+                                            <td style="color:black; font-size:1em; padding:20px" align="center">비밀번호</td>
+                                            <td width="*">
+                                                    <input type="password" class="form-control" id="password" name="password"style="width:400px">
+                                            </td>
+                                        </div>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </div>
+                </p>
+
+                <br>
+
+            {% if messages %}
+            {% for message in messages %}
+                <div class="row" style="text-align:center">
+                <div class="col-sm-6" style="text-align:center">
+                    <div class="alert alert-danger" style="text-align:center">
+                    <strong>{{ message.tags }}!</strong> {{ message.message }}
+                    </div>
+                </div>
+                </div>
+            {% endfor %}
+            {% endif %}
+
+                    <br><br>
+                    <div align="center">
+                        <button type="submit" class="btn btn-dark"><p style="font-size:1.5em">로그인</p></button>
+                </div>        
+            </form>
+        </div>
+
+
+        <div class="container tab-pane" id="seller">
+            <form method="POST" action="{%url 'sellers_login'%}">
+                <div class="text_style">
+                    <p>
+                        <tr>
+                            <td>
+                                <table width="100%" cellpadding="20" cellspacing="20" border="0">
+        
+                                    {% csrf_token %}
+                                    <tr>
+                                        <div class="form-group">
+                                            <td style="color:black; font-size:1em; padding:20px" align="center">아이디</td>
+                                            <td width="*">
+                                                <input type="text" class="form-control" id="ID" name="ID" style="width:400px">
+                                            </td>
+                                        </div>
+                                    </tr>
+                                    <tr>
+                                        <div class="form-group">
+                                            <td style="color:black; font-size:1em; padding:20px" align="center">비밀번호</td>
+                                            <td width="*">
+                                                    <input type="password" class="form-control" id="password" name="password"style="width:400px">
+                                            </td>
+                                        </div>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </div>
+                </p>
+                <br>
+                
+                    <br><br>
+                    <div align="center">
+                        <button type="submit" class="btn btn-dark"><p style="font-size:1.5em">로그인</p></button>
+                </div>
+            </form></div>
+      </div>
+<br><br>
+</article>
+
+{% endblock %}
