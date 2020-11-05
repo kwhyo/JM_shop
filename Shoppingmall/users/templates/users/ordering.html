@@ -1,0 +1,127 @@
+{%extends 'users/mypage_sidebar.html'%}
+
+{% block content2 %}
+<style>
+    #ordering ul li{
+        list-style:none;
+        margin:0px 20px 0 -10px;
+        padding:10px 0;
+        border-bottom:1px solid#999;
+    }
+    #ordering ul li::after{
+        content:'';
+        display:block;
+        clear:both;
+    }
+    #ordering div.thumb{
+        float:left;
+        width:250px;
+    }
+    #ordering div.gdsInfo{
+        float:right;
+        width:calc(100% - 320px);
+        font-size:13px;
+        line-height:2;
+    }
+    #ordering div.gdsInfo span{
+        display:inline-block;
+        width:100px;
+        font-weight:bold;
+        margin-right:10px;
+    }
+    #ordering div.gdsInfo .delete{
+        text-align:right;
+    }
+    #ordering div.gdsInfo .delete button{
+        font-size:12px;
+        padding:5px 10px;
+        border:1px solid #eee;
+        background:#eee;
+    }
+
+
+    .allCheck { font-size:11px; float:left; width:200px; }
+    .allCheck input { width:16px; height:16px; }
+    .allCheck label { margin-left:10px; }
+    .delBtn { float:right; width:300px; text-align:right; }
+    .delBtn button { font-size:11px; padding:5px 10px; border:1px solid #eee; background:#eee;}
+
+    .checkBox { float:left; width:30px; }
+    .checkBox input { width:16px; height:16px; }
+</style>
+<main>
+<div class="container-fluid">
+<div class="table-responsive text-nowrap">
+<h3 style="font-weight:bold">주문/배송현황</h3>
+<br><br>
+    <a>최근 주문한 상품의 배송 현황입니다. 과거에 배송 완료된 주문은 MYPAGE의 '구매내역'에서 확인바랍니다.</a>
+<br><br>
+<section id ="ordering">
+    <ul>
+        {% for oitem in ordering %}
+            <li>
+                <div class="thumb">
+                    <a href = "{{ oitem.item.image.url }}"><img class ="img-responsive img-center" src = "{{ oitem.item.image.url }}" width="200" height="200"/></a>
+                </div>
+                <div class="gdsInfo">
+                    <p>
+                        <span>구매 날짜</span>
+                        {{ oitem.buy_date }}
+                        <br/>
+                        <span>상품명</span>
+                        <a href = '/category/{{oitem.item.category}}/{{oitem.item.name}}'>{{ oitem.item.name }}</a>
+                        <br/>
+                        <span>개당 가격</span>
+                        {{ oitem.item.price }}
+                        <br/>
+                        <span>구입 수량</span>
+                        {{ oitem.item_count }}
+                        <br/>
+                        <span>최종 가격</span>
+                        {{ oitem.price }}
+                        <br/>
+                        <span>최종 가격</span>
+                        {{ oitem.orderstate }}
+                        <br/>
+
+                        <form action="http://info.sweettracker.co.kr/tracking/5" method="post">
+                            <div class="form-group">
+                              <label for="t_key">API key</label>
+                              <input type="text" class="form-control" id="t_key" name="t_key" placeholder="제공받은 APIKEY">
+                            </div>
+                            <div class="form-group">
+                              <label for="t_code">택배사 코드</label>
+                              <input type="text" class="form-control" name="t_code" id="t_code" placeholder="택배사 코드">
+                            </div>
+                            <div class="form-group">
+                              <label for="t_invoice">운송장 번호</label>
+                              <input type="text" class="form-control" name="t_invoice" id="t_invoice" placeholder="운송장 번호">
+                            </div>
+                            <button type="submit" class="btn btn-default">조회하기</button>
+                        </form>
+
+                    </p>
+                    <div class="delete">
+                        <!--배송조회-->
+                        <button type="button" class="delete_btn" data-cartNum="{{oitem.id}}">배송조회</button>
+                    </div>
+                </div>
+            </li>
+            {% if oitem is none %}
+                <li >
+                <span >Your Ordering Product is empty</span>
+            </li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+
+
+</section>
+
+
+</div>
+
+</div>
+</main>
+
+{% endblock %}

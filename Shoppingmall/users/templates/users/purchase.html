@@ -1,0 +1,356 @@
+{%extends 'users/top.html'%} {% block content %}
+<style>
+  .container div {
+    text-align: center;
+  }
+
+  table {
+    width: 80%;
+    border: 1px solid #444444;
+    border-collapse: collapse;
+  }
+
+  th {
+    font-size: 13px;
+    background-color: #eeeeee;
+  }
+
+  td {
+    border: 1px solid #444444;
+    font-size: 13px;
+    padding: 10px;
+  }
+
+  .fix {
+    width: 150px;
+    background-color: #eeeeee;
+    font-weight: bold;
+  }
+
+  input {
+    height: 22px;
+    margin: 3px 0px 3px 0px;
+    border: 1px solid #d4d8d9;
+    line-height: 22px;
+  }
+  
+  input::placeholder {
+  color: black;
+}
+
+</style>
+
+<body>
+
+  <div>
+    {% csrf_token %}
+
+    <table width="1000" height="200" align="center" border="1">
+      <thead>
+        <tr align="center" height="40">
+          <p><th colspan="7">주문내역</th></p>
+        </tr>
+        <tr height="40" align="center">
+          <th><i class="far fa-check-square"></i></th>
+          <!-- 체크 -->
+          <th>이미지</th>
+          <th>상품정보</th>
+          <th>가격</th>
+          <th>수량</th>
+          <th>배송비</th>
+          <th>합계</th>
+        </tr>
+      </thead>
+
+      <tr align="center">
+        <td><input type="checkbox" name="product" checked /></td>
+        <td>
+          <img
+            class="img-responsive img-center"
+            width="100px"
+            height="100px"
+            src="{{ product.image.url }}"
+          />
+        </td>
+        <td id="product">{{product.name}}</td>
+        <td id="price">{{product.price}}</td>
+        <td id="quantity">{{quantity}}</td>
+        <td>2,500원</td>
+        <td style="font-weight: 900; font-size : 15px" id="total"></td>
+      </tr>
+   
+    </table>
+  </div>
+
+  <br /><br /><br>
+
+  <div>
+    <table width="500px" height="200" align="center" border="1">
+      <thead>
+        <tr align="center" height="40">
+          <p><th colspan="7">주문자 정보</th></p>
+        </tr>
+      </thead>
+
+      <tr>
+        <td class="fix">주문하시는 분</td>
+        <td id="buyer_name">
+          {{user.username}}
+
+        </td>
+      </tr>
+      <tr>
+        <td class="fix">휴대전화</td>
+        <td>
+          {{user.phone}}
+        </td>
+      </tr>
+
+      <tr>
+        <td class="fix" padding: 5px 6px>이메일</td>
+          <td>
+            {{user.e_mail}}
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <br><br><br><br>
+  <div>
+
+
+    <table width="500px" height="200" align="center" border="1">
+
+    <thead>
+      <tr align="center" height="40">
+        <p><th colspan="7">배송지 정보</th></p>
+      </tr>
+    </thead>
+      <tr>
+        <td class="fix">받으시는 분</td>
+        <td>
+          <input
+          class="submit"
+            type="text"
+            id="order_name"
+            name="order_name"
+            style="width: 200px;"
+          />
+        </td>
+      </tr>
+      <tr>
+        <td class="fix">휴대전화</td>
+        <td>
+          <input type="text" class="form-control" id="order_phone_number" name="phone_number" style="width: 200px;">
+        </td>
+      </tr>
+
+      <tr>
+        <td class="fix">주소</td>
+
+        <td width="*" padding="20px" align="left">
+            <input type="text" id="postcode" name="postcode" placeholder="우편번호"
+                readonly="readonly" style="width:100px; height:30px; " maxlength="20" />
+            <input type="button" onclick="execDaumPostcode()" value="우편번호 찾기"><br>
+            <input type="text" id="address1" name="address1" readonly="readonly"
+                placeholder="주소" style="width:400px;  height:30px;" maxlength="20" />
+            <input type="text" id="address2" name="address2" placeholder="상세주소"
+                style="width:400px;  height:30px;" maxlength="20" />
+        </td>
+    </tr>
+
+      <tr>
+        <td class="fix" padding: 5px 6px>이메일</td>
+          <td><input type="text" id="order_email" style="width: 200px; height: 30px;" 
+          />
+        </td>
+      </tr>
+
+      <tr>
+        <td class="fix" padding: 5px 6px>배송메세지</td>
+        <td>
+          <input type="text" id="message" style="width: 500px; height: 50px;" />
+        </td>
+      </tr>
+    </table>
+    <br><br><br>
+
+    <table width="1000" height="200" align="center" border="1">
+      <thead>
+        <tr align="center" height="40">
+          <p><th colspan="7">결제수단</th></p>
+        </tr>
+      </thead>
+
+      <tr align="center">
+        <td colspan="6" width="50" height="100">      
+          <div class="billing-radio">
+          <label class="control control--radio">
+              <input type="radio" name="type" value="card" />
+              신용카드
+          </label>
+          <label class="control control--radio">
+              <input type="radio" name="type" value="trans"/>
+              실시간 계좌이체
+          </label>
+          <label class="control control--radio">
+              <input type="radio" name="type" value="phone"/>
+              휴대폰
+          </label>
+          <label class="control control--radio">
+              <input type="radio" name="type" value="vbank"/>
+              가상계좌 입금
+          </label>
+          </div>
+        </td>
+        <td style="font-weight: 900; font-size : 15px" id="total"><br>
+        <button type="button" class="btn btn-dark" onclick="test()"><p style="font-size:1.5em">결제하기</p></button>
+
+<!--          <input type="button" onclick="test()" value="결제하기" />
+    -->  </td>
+      </tr>
+   
+    </table>
+  </div>
+<br><br><br>
+
+
+</div> 
+</body>
+
+
+<script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
+<script>
+    function execDaumPostcode() {
+        new daum.Postcode({
+            oncomplete: function (data) {
+                // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+                // 각 주소의 노출 규칙에 따라 주소를 조합한다.
+                // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+                var fullAddr = ''; // 최종 주소 변수
+                var extraAddr = ''; // 조합형 주소 변수
+                // 사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
+                if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
+                    fullAddr = data.roadAddress;
+                } else { // 사용자가 지번 주소를 선택했을 경우(J)
+                    fullAddr = data.jibunAddress;
+                }
+                // 사용자가 선택한 주소가 도로명 타입일때 조합한다.
+                if (data.userSelectedType === 'R') {
+                    //법정동명이 있을 경우 추가한다.
+                    if (data.bname !== '') {
+                        extraAddr += data.bname;
+                    }
+                    // 건물명이 있을 경우 추가한다.
+                    if (data.buildingName !== '') {
+                        extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+                    }
+                    // 조합형주소의 유무에 따라 양쪽에 괄호를 추가하여 최종 주소를 만든다.
+                    fullAddr += (extraAddr !== '' ? ' (' + extraAddr + ')' : '');
+                }
+                // 우편번호와 주소 정보를 해당 필드에 넣는다.
+                document.getElementById('postcode').value = data.zonecode; //5자리 새우편번호 사용
+                document.getElementById('address1').value = fullAddr;
+                // 커서를 상세주소 필드로 이동한다.
+                document.getElementById('address2').focus();
+            }
+        }).open();
+    }
+
+//값 계산 
+  function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "원";
+  }
+  
+  var price = document.getElementById("price").innerHTML;
+  //html에서 price라는 id를 가진 변수의 값을 변경해준다.navbar__toggleBtn
+  document.getElementById('price').innerHTML = numberWithCommas(price);
+  var product = document.getElementById("product").innerHTML;
+  var quantity = document.getElementById("quantity").innerHTML ;
+  var total = numberWithCommas( Number(price)*Number(quantity) ) ;//0더할것
+  document.getElementById('total').innerHTML = total;
+
+  var phone_number = document.getElementById("order_tel").innerHTML ;
+  var postcode =  document.getElementById("order_post").innerHTML ;
+  var address = document.getElementById("address1").innerHTML + document.getElementById("address2").innerHTML;
+  var email = document.getElementById('order_mail').innerHTML;
+  var type = $('.charge-type input:checked').val();
+
+
+  function test() {
+
+  var username = document.getElementById("order_name").innerHTML ;
+  var phone_number = document.getElementById("order_phone_number").innerHTML ;
+  var postcode =  document.getElementById("postcode").innerHTML ;
+  var address = document.getElementById("address1").innerHTML + document.getElementById("address2").innerHTML;
+  var email = document.getElementById('order_email').innerHTML;
+  var type = $('.charge-type input:checked').val();
+
+  console.log(total);
+  IMP.init("imp61600709");
+
+  //결제창 호출
+  IMP.
+  (
+    {
+      pg: "inicis", // version 1.1.0부터 지원.
+      pay_method: type,
+      merchant_uid: "merchant_" + new Date().getTime(),
+      name: product,
+      amount: Number(price)*Number(quantity) , //판매 가격+0할것
+      buyer_email: email,
+      buyer_name: username,
+      buyer_tel: phone_number,
+      buyer_addr: address,
+      buyer_postcode: postcode,
+    },
+    function (rsp) {
+      if (rsp.success) {
+        var msg = "결제가 완료되었습니다.";
+        msg += "고유ID : " + rsp.imp_uid;
+        msg += "상점 거래ID : " + rsp.merchant_uid;
+        msg += "결제 금액 : " + rsp.paid_amount;
+        msg += "카드 승인번호 : " + rsp.apply_num;
+        alert(msg);
+        ajax_test();
+
+      } else {
+        var msg = "결제에 실패하였습니다.";
+        msg += "에러내용 : " + rsp.error_msg;
+        alert(msg);
+      }
+    }
+  );
+        
+}
+
+function ajax_test(){
+
+  var user = document.getElementById("order_name").innerHTML ;
+  alert(user);
+
+  $.ajax({
+    
+      url: '{%url 'purchase' %}',
+      data: { 'username' : user.value},
+      success : function(data){
+        location.href = "/purchase/list/";
+      }
+    });
+}
+</script>
+
+<script
+  type="text/javascript"
+  src="https://code.jquery.com/jquery-1.12.4.min.js"
+></script>
+<script
+  type="text/javascript"
+  src="https://cdn.iamport.kr/js/iamport.payment-1.1.5.js"
+></script>
+
+
+
+
+
+{% endblock %}

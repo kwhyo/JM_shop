@@ -1,0 +1,194 @@
+{% extends "users/top.html" %}
+
+{% block content %}
+<style>
+    #cart_list ul li{
+        list-style:none;
+        margin:0px 20px 0 -10px;
+        padding:10px 0;
+        border-bottom:1px solid#999;
+    }
+    #cart_list ul li::after{
+        content:'';
+        display:block;
+        clear:both;
+    }
+    #cart_list div.thumb{
+        float:left;
+        width:250px;
+    }
+    #cart_list div.gdsInfo{
+        float:right;
+        width:calc(100% - 320px);
+        font-size:13px;
+        line-height:2;
+    }
+    #cart_list div.gdsInfo span{
+        display:inline-block;
+        width:100px;
+        font-weight:bold;
+        margin-right:10px;
+    }
+    #cart_list div.gdsInfo .delete{
+        text-align:right;
+    }
+    #cart_list div.gdsInfo .delete button{
+        font-size:12px;
+        padding:5px 10px;
+        border:1px solid #eee;
+        background:#eee;
+    }
+
+
+    .allCheck { font-size:11px; float:left; width:200px; }
+    .allCheck input { width:16px; height:16px; }
+    .allCheck label { margin-left:10px; }
+    .delBtn { float:right; width:300px; text-align:right; }
+    .delBtn button { font-size:11px; padding:5px 10px; border:1px solid #eee; background:#eee;}
+
+    .checkBox { float:left; width:30px; }
+    .checkBox input { width:16px; height:16px; }
+</style>
+<main>
+<div class="container-fluid">
+<div class="table-responsive text-nowrap">
+<h1>장바구니</h1>
+<br><br>
+<section id ="cart_list">
+    <ul>
+        <li>
+            <div class="allCheck">
+                <input type="checkbox" name="allCheck" id ="allCheck" /><label for="allCheck">모두 선택</label>
+            </div>
+            <script type="text/javascript">
+                $("#allCheck").click(function(){
+                 var chk = $("#allCheck").prop("checked");
+                 if(chk) {
+                  $(".chBox").prop("checked", true);
+                 } else {
+                  $(".chBox").prop("checked", false);
+                 }
+                });
+            </script>
+
+            <div class ="delBtn">
+                <button type="button" class="selectDelete_btn">선택 삭제</button>
+            </div>
+            <script src="http://code.jquery.com/jquery-3.4.1.min.js"></script>
+            <script type="text/javascript">
+             $(".selectDelete_btn").click(function(){
+                var confirm_val = confirm("정말 삭제하시겠습니까?");
+                if(confirm_val) {
+                    var checkArr = new Array();
+                    $("input[class='chBox']:checked").each(function(){
+                        checkArr.push($(this).attr("data-cartNum"));
+                    });
+                    $.ajax({
+                        url : "/cart/{{request.session.user}}/delete",
+                        type : "post",
+                        data : { 'ch_box' : checkArr.toString() },
+                        success : function(data){
+                            if (data['confirm'] =="ok"){
+                                alert("선택 상품이 장바구니에서 삭제되었습니다");
+                                location.href = "/cart/{{request.session.user}}";
+                            }
+                            else{
+                                alert("삭제 실패");
+                                return;
+                            }
+                        }
+                    });
+                 }
+             });
+            </script>
+
+        </li>
+
+        {% for cartitem in cart %}
+            <li>
+                <div class="checkBox">
+                   <input type="checkbox" name="chBox" class="chBox" data-cartNum="{{cartitem.id}}" />
+                </div>
+                <div class="thumb">
+                    <a href = "{{ cartitem.item.image.url }}"><img class ="img-responsive img-center" src = "{{ cartitem.item.image.url }}" width="200" height="200"/></a>
+                </div>
+                <div class="gdsInfo">
+                    <p>
+                        <span>상품명</span>
+                        <a href = '/category/{{item.category}}/{{item.name}}'>{{ cartitem.item.name }}</a>
+                        <br/>
+                        <span>카테고리</span>
+                        {{ cartitem.item.category }}
+                        <br/>
+                        <span>개당 가격</span>
+                        {{ cartitem.item.price }}
+                        <br/>
+                        <span>구입 수량</span>
+                        {{ cartitem.item_count }}
+                        <br/>
+                        <span>최종 가격</span>
+                        <br/>
+                    </p>
+                    <div class="delete">
+                        <!--이 상품 삭제를 해야함-->
+                        <button type="button" class="delete_btn" data-cartNum="{{cartitem.id}}">삭제</button>
+                    </div>
+                </div>
+            </li>
+            {% if cartitem is none %}
+                <li >
+                <span >Your Cartlist is empty</span>
+            </li>
+            {% endif %}
+        {% endfor %}
+        <script type="text/javascript">
+         $(".chBox").click(function(){
+          $("#allCheck").prop("checked", false);
+         });
+        </script>
+    </ul>
+
+    <ul>
+        <button type="button" class="btn btn-primary float-right" id="cart" onclick="input()">
+            <a style="width: 30%; height: 50px; font-size: 150%;">구매하기</a>
+        </button>
+        <script type="text/javascript">
+          function input() {
+            //window.location.href = "/order_form/{{request.session.user}}/" ;
+
+            var confirm_val = confirm("선택한 상품을 구매하시겠습니까?");
+                if(confirm_val) {
+                    var checkArr = new Array();
+                    $("input[class='chBox']:checked").each(function(){
+                        checkArr.push($(this).attr("data-cartNum"));
+                    });
+                    $.ajax({
+                        url : "/order_form/{{request.session.user}}",
+                        type : "GET",
+                        data : { 'ch_box' : checkArr.toString()},
+                        success : function(data){
+                            if (data['confirm'] =="ok"){
+                                location.href = "/order_form/{{request.session.user}}";
+                            }
+                            else{
+                                alert("구매 실패");
+                                return;
+                            }
+                        }
+                    });
+                 }
+          }
+          function output() {
+            document.getElementById("output").value = temp;
+          }
+        </script>
+    </ul>
+</section>
+
+
+</div>
+
+</div>
+</main>
+
+{% endblock content %}

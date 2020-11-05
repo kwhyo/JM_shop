@@ -1,0 +1,30 @@
+<body>
+  <div style="margin: 0 70px 0px 70px;">
+    <form method="POST" enctype="multipart/form-data">
+      <!-- 카테고리 : S -->
+      <div align="center">
+        <h3><strong>BEST ITEM</strong><br /></h3>
+      </div>
+      <br /><br />
+      <div class="product_list" style="font-size: 1.25em;">
+        {% for product in products %}
+
+        <div class="text-center" style="margin: 15px 15px 15px 15px;">
+          <a href="/category/{{product.category}}/{{product.name}}">
+            <img src="{{ product.image.url }}" width="290" height="300" />
+          </a>
+          <br />
+
+          <span style="font-size: 1.25em;"
+            >{{product.name}}<br />
+            {{product.price}}원</span
+          >
+        </div>
+
+        {% endfor %}
+
+        <br /><br />
+      </div>
+    </form>
+  </div>
+</body>

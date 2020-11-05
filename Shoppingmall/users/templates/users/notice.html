@@ -1,0 +1,52 @@
+{%extends 'users/top.html'%}
+{% block content %}
+<article class="container">
+    <div style="text-align:center">
+        <div class="top_menu">
+            <p>공지사항</p>
+        </div>
+    </div>
+    <br><br>
+
+    <!--페이지에서 독립적-->
+    <h3>목록</h3>
+    <table class="uiTable">
+        <!-- 게시판 목록  -->
+        <thead>
+        <tr>
+            <th scope="col"> No </th>
+            <th scope="col"> 제목 </th>
+            <th scope="col"> 작성자 </th>
+            <th scope="col"> 작성일 </th>
+            <th scope="col"> 조회수 </th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <!-- 게시물이 출력될 영역 -->
+        {% if notice_list %}
+        {% for notice in notice_list %}
+        <tr>
+            <td> {{ notice.id }} </td>
+            <td> <a href="{{ notice.get_absolute_url2 }}">{{notice.title}} </a></td>
+            <td> 작성자 </td>
+            <td> {{notice.pub_date}} </td>
+            <td> 00 </td>
+        </tr>
+        {% endfor %}
+        {% else %}
+        <tr><td colspan='4'>공지사항이 없습니다.</td></tr>
+        {%endif%}
+
+
+        </tbody>
+
+
+    </table>
+
+
+</article>
+{% endblock %}
+
+
+

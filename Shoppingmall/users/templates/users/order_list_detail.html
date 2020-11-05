@@ -1,0 +1,248 @@
+{%extends 'users/mypage_sidebar.html'%}
+
+{% block content2 %}
+<style>
+    #ordering ul li{
+        list-style:none;
+        margin:0px 20px 0 -10px;
+        padding:10px 0;
+        border-bottom:1px solid#999;
+    }
+    #ordering ul li::after{
+        content:'';
+        display:block;
+        clear:both;
+    }
+    #ordering div.thumb{
+        float:left;
+        width:250px;
+    }
+    #ordering div.gdsInfo{
+        float:right;
+        width:calc(100%);
+        font-size:13px;
+        line-height:2;
+    }
+    #ordering div.gdsInfo span{
+        display:inline-block;
+        width:100px;
+        font-weight:bold;
+        margin-right:10px;
+    }
+    #ordering div.gdsInfo .delete{
+        text-align:right;
+    }
+    #ordering div.gdsInfo .delete button{
+        font-size:12px;
+        padding:5px 10px;
+        border:1px solid #eee;
+        background:#eee;
+    }
+
+
+    .allCheck { font-size:11px; float:left; width:200px; }
+    .allCheck input { width:16px; height:16px; }
+    .allCheck label { margin-left:10px; }
+    .delBtn { float:right; width:300px; text-align:right; }
+    .delBtn button { font-size:11px; padding:5px 10px; border:1px solid #eee; background:#eee;}
+
+    .checkBox { float:left; width:30px; }
+    .checkBox input { width:16px; height:16px; }
+</style>
+<main>
+    <div class="container-fluid">
+    <div class="table-responsive text-nowrap">
+    <h1>주문 조회</h1>
+    <br><br>
+
+
+    <table class="table">
+        <thead>
+            <tr>
+                <td colspan="8">주문 정보</td>
+            </tr>
+            <tr>
+                <th scope="col" width="10%" align="center">주문번호</th>
+                <th scope="col" width="10%" align="center">상품사진</th>
+                <th scope="col" width="10%" align="center">구매자</th>
+                <th scope="col" width="10%" align="center">구매일자</th>
+                <th scope="col" width="10%" align="center">상품명</th>
+                <th scope="col" width="10%" align="center">가격</th>
+                <th scope="col" width="10%" align="center">수량</th>
+                <th scope="col" width="10%" align="center">결제금액</th>
+                <th scope="col" width="10%" align="center">주문상태</th>
+            </tr>
+        </thead>
+
+        <tbody>
+        {% for order in orders %}
+
+             <tr>
+                 <td id="order_code">{{order.order_code}}</td>
+                {% if order.item.image %}
+                    <td><a href = "{{ order.item.image.url }}"><img class ="img-responsive img-center" src = "{{ order.item.image.url }}" width="50" height="50"/></td>
+                {% endif %}
+
+                <td>{{order.user.username}}</td>
+                 <td>{{order.order_date}}</td>
+
+                <td><a href = '/sellers/register/{{order.item.category}}/{{order.item.name}}/detail'>
+                    {{ order.item.name }}</a></td>
+                <td>{{ order.item.price }}</td>
+                <td>{{ order.item_count }}</td>
+                <td>{{ order.total_price }}</td>
+                <td id="current_order_state">{{ order.order_state }}</td>
+             </tr>
+            {% if orders is none %}
+                <tr>
+                    <td colspan='5'>Your list is empty</td>
+                </tr>
+            {% endif %}
+        {% endfor %}
+
+
+        </tbody>
+    </table>
+
+        <table class="table">
+            <thead>
+            <tr>
+                <td colspan="6">배송정보</td>
+            </tr>
+            <tr>
+                <th scope="col"></th>
+                <th scope="col">받으시는 분</th>
+                <th scope="col">우편번호</th>
+                <th scope="col">주소</th>
+                <th scope="col">전화번호</th>
+                <th scope="col">배송메시지</th>
+            </tr>
+            </thead>
+            <tr>
+               <td></td>
+                <td>{{ shipping_info.receiver_name}}</td>
+                <td>{{ shipping_info.postcode }}</td>
+                <td>{{ shipping_info.address}} {{ shipping_info.detail_address}}</td>
+                <td>{{ shipping_info.phone }}</td>
+                <td>{{ shipping_info.shipping_message }}</td>
+
+            </tr>
+        </table>
+
+        <table class="table">
+            <thead>
+            <tr>
+                <td colspan="6">결제정보</td>
+            </tr>
+            <tr>
+                <th scope="col"></th>
+                <th scope="col">결제방식</th>
+                <th scope="col">결제금액</th>
+                <th scope="col">매출전표(영수증) 확인</th>
+            </tr>
+            </thead>
+            <tr>
+               <td></td>
+                <td>{{ shipping_info.pay_method}}</td>
+                <td>{{ shipping_info.total_price }}</td>
+                <td><a href = "{{ shipping_info.receipt_url}}" target="_blank"> <input type="button" id="receipt_button"  value="매출전표 확인" /> </a> </td>
+            </tr>
+        </table>
+
+        {% if shipping_info.tracking_number != '' %}
+
+        <table class="table">
+            <thead>
+                <tr>
+                        <td colspan="6">송장번호 확인</td>
+                </tr>
+            </thead>
+
+                <tr>
+                    <td>현재 송장번호</td>
+                    <td>
+                      {{shipping_info.tracking_number}}
+                    </td>
+                </tr>
+
+
+            <tr>
+                <td colspan="4" width="10%">
+                  <input type="text" class="form-control" id="tracking_num" name="tracking_num" style="width: 300px;">
+                </td>
+                <td style=" font-size : 12px">
+                <input type="button" id="button2" onclick="enter_tracking_num()" value="송장입력 및 수정" />
+                </td>
+            </tr>
+
+        </table>
+
+        {% endif %}
+    </div>
+    </div>
+
+
+  </main>
+
+<script>
+
+    var state = document.getElementById("current_order_state").innerHTML;
+      if(state == "주문완료"){
+        $("input:radio[name='order_state']:radio[value='주문완료']").attr("checked", true);
+      }else if(state == "주문확인(출고준비)"){
+        $("input:radio[name='order_state']:radio[value='주문확인(출고준비)']").attr("checked", true);
+      }else if(state == "출고완료(배송중)"){
+        $("input:radio[name='order_state']:radio[value='출고완료(배송중)']").attr("checked", true);
+      }else{
+        $("input:radio[name='order_state']:radio[value='배송완료']").attr("checked", true);
+      }
+
+    function change_order_state() {
+        var order_state = $('input[name=order_state]:checked').val();
+        var order_code = {{ shipping_info.order_code }};
+
+      $.ajax({
+                            url : "/sellers/mypage/change_order_state",
+                            type : "post",
+                            data : { 'order_code' : order_code,
+                                    'order_state' : order_state
+                            },
+                            success : function(data){
+                                if (data['confirm'] =="ok"){
+                                    alert("정상적으로 주문상태가 변경되었습니다.");
+                                    location.href = location.href;
+                                }
+                                else{
+                                    alert("변경실패, 다시 선택해주십시오.");
+                                    return;
+                                }
+                            }
+        });
+    }
+
+//운송장번호 입력
+  function enter_tracking_num() {
+  var tracking_num = $("#tracking_num").val();
+  var order_code = {{ shipping_info.order_code }};
+
+      $.ajax({
+                            url : "/sellers/mypage/enter_tracking_num",
+                            type : "post",
+                            data : { 'order_code' : order_code,
+                                    'tracking_num' : tracking_num
+                            },
+                            success : function(data){
+                                if (data['confirm'] =="ok"){
+                                    alert("정상적으로 송장번호가 입력 및 변경되었습니다.");
+                                    location.href = location.href;
+                                }
+                                else{
+                                    alert("입력실패, 다시 입력해주십시오.");
+                                    return;
+                                }
+                            }
+        });
+  }
+</script>
+
+{% endblock %}

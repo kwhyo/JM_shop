@@ -1,0 +1,115 @@
+
+
+{%extends 'sellers/top.html'%}
+{% block content %}
+
+{%include 'users/home_product.html'%}
+
+
+{% endblock %}
+
+
+<script>
+
+  var divdiv = document.getElementById("scrollDiv");
+
+  divdiv.scrollTop = divdiv.scrollHeight;
+</script>
+<body>
+
+  <div id="scrollDiv" style="overflow:auto" ></div>
+
+</body>
+
+<script>
+  $("a.hoverbtn").hover(function() {
+    console.log($(this)[0].children[0].id);
+    switch ($(this)[0].children[0].id) {
+      case "theater":
+        $(this)[0].children[0].src ="/images/shirt.jpg";
+        break;
+      case "musical":
+        $(this)[0].children[0].src ="/images/shirt.jpg";
+        break;
+      case "performance":
+        $(this)[0].children[0].src = "/images/shirt.jpg";
+        break;
+      case "etc":
+        $(this)[0].children[0].src ="/images/shirt.jpg";
+        break;
+    }
+  }, function() {
+    switch ($(this)[0].children[0].id) {
+      case "theater":
+        $(this)[0].children[0].src = "/images/shirt.jpg";
+        break;
+      case "musical":
+        $(this)[0].children[0].src ="/images/shirt.jpg";
+        break;
+      case "performance":
+        $(this)[0].children[0].src ="/images/shirt.jpg";
+        break;
+      case "etc":
+        $(this)[0].children[0].src = "/images/shirt.jpg";
+        break;
+    }
+  });
+</script>
+
+<!-- Footer -->
+<footer>
+  <div class="row">
+    <div class="col-lg-12">
+      <p>Software Engineering Project </p>
+      <button type="/admin" class="btn btn-default" onclick="location.href='/admin';">Administrator</button>
+    </div>
+    <!-- /.col-lg-12 -->
+  </div>
+  <!-- /.row -->
+    <head>
+  <!-- /.sns share -->
+  <script type="text/javascript">
+    function toSNS(sns, strTitle, strURL) {
+      var snsArray = new Array();
+      var strMsg = strTitle + " " + strURL;
+      var image = "/images";
+      snsArray['twitter'] = "http://twitter.com/home?status=" + encodeURIComponent(strTitle) + ' ' + encodeURIComponent(strURL);
+      snsArray['facebook'] = "http://www.facebook.com/share.php?u=" + encodeURIComponent(strURL);
+      snsArray['google'] = "https://plus.google.com/share?url=" + encodeURIComponent(strURL) + "&t=" + encodeURIComponent(strTitle);
+      window.open(snsArray[sns]);
+    }
+    function copy_clip(url) {
+      var IE = (document.all) ? true : false;
+      if (IE) {
+        window.clipboardData.setData("Text", url);
+        alert("이 글의 단축url이 클립보드에 복사되었습니다.");
+      } else {
+        temp = prompt("이 글의 단축url입니다. Ctrl+C를 눌러 클립보드로 복사하세요", url);
+      }
+    }
+  </script>
+  </head>
+
+  <body style="overflow:hidden;background-color:#f0f0f0;">
+    <div class="sns_wrap">
+      <p>SNS share</p>
+      <ul>
+        <li><a href="javascript:toSNS('facebook','공유제목!','http://localhost:3000')" title="페이스북으로 가져가기"><img src="/images/sns_facebook.png"></a>
+        <a href="javascript:toSNS('twitter','공유제목!','http://localhost:3000')" title="트위터로 가져가기"><img src="/images/sns_twitter.png"></a>
+        <a href="javascript:toSNS('google','공유제목!','http://localhost:3000')" title="구글플러스로 가져가기"><img src="/images/sns_google.png"></a></li>
+      </ul>
+
+
+</footer>
+
+<!-- jQuery -->
+
+</div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</body>
+
+
