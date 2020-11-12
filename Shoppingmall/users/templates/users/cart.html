@@ -1,6 +1,7 @@
 {% extends "users/top.html" %}
 
 {% block content %}
+{% load humanize %}
 <style>
     #cart_list ul li{
         list-style:none;
@@ -121,12 +122,13 @@
                         {{ cartitem.item.category }}
                         <br/>
                         <span>개당 가격</span>
-                        {{ cartitem.item.price }}
+                        {{ cartitem.item.price|intcomma }}
                         <br/>
                         <span>구입 수량</span>
                         {{ cartitem.item_count }}
                         <br/>
-                        <span>최종 가격</span>
+                        <span>합계</span>
+                        {{ cartitem.total_price|intcomma }}
                         <br/>
                     </p>
                     <div class="delete">

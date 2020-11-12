@@ -9,11 +9,12 @@ urlpatterns = [
 
     path('', views.home, name='home'),
     path('signup', views.signup, name='signup'),
+    path('signup/check_id', views.check_id),
     path('users/signup', views.users_signup, name='users_signup'),
     path('login', views.login, name='login'),
+    path('change_user_info', views.change_user_info, name='change_user_info'),
     path('logout', views.logout, name='logout'),
     path('mypage/', views.mypage, name='usermypage'),
-
 
     path('category/<str:category>', views.category, name='category'),
     path('category/<str:category>/<str:product>',

@@ -1,10 +1,308 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{%extends 'users/top.html'%}
+{% block content %}
 
-</body>
-</html>
+<!--폼 안에다가 입력해줘야한다. (안써주면 에러발생), csrf_token 폼의 경우에는 , 데이터를 서버에 전달하는 기능.이때 암호화된 키를 숨겨놓아 크로스도메인을 막기 위함. -->
+<!-- bootstrap -component - forms -->
+
+
+
+<article class="container">
+    <div style="text-align:center">
+          <p style="font-size:15px">회원정보수정</p>
+    </div>
+    <br><br>
+    <!--페이지에서 독립적-->
+    <!--url에서 users_signup에 해당하는 view로 post-->
+    <form id="join-form" name="joinForm" method="POST" action="{%url 'change_user_info'%}">
+        {% csrf_token %}
+    <h2>회원정보 입력</h2>
+        <div class="page-body">
+        <div class="requird">
+        </div>
+            <div class="box-wrap">
+                <ul class="join-form">
+                    <dd><span class="pointcheck">*</span> <strong>ID</strong></dd>
+                    <li>
+                        <div class="right-msg">
+                            <input style="font-size:10px" type="text" id="ID" name="ID"  size="20" maxlength="12"  readonly="readonly" placeholder="{{myuser_info.userID}}" >
+                            <span style="color:#979797;">아이디는 변경할 수 없습니다.</span>
+                        </div>
+
+                    </li>
+
+                    <dd>
+                        <span class="pointcheck">*</span> <strong>비밀번호</strong>
+                        <span style="color:#979797;">(영문 대소문자/숫자/특수문자 중 2가지 이상 조합, 10자~16자)</span>
+                    </dd>
+                    <li>
+                        <input type="password" class="join_input" id="password" name="password" value="" size="20" maxlength="20"  valch="yes" msg="비밀번호" onkeyup="check_pwd_length(this, 'passwd');" />
+                        <input type="hidden" name="passwd_enc" value=""/>
+                    </li>
+                    <dd><span class="pointcheck">*</span> <strong>비밀번호 확인</strong></dd>
+                    <li>
+                        <input type="password" class="join_input" id="re_password" name="re_password" value="" size="20" maxlength="20"  valch="yes" msg="비밀번호 확인" onkeyup="check_pwd_length(this, 'repasswd');" />
+                    </li>
+                    <dd><span class="pointcheck">*</span> <strong>이름</strong></dd>
+                    <li>
+                        <input type="text" id="username" name="username" size="20" maxlength="30" class="join_input" valch="yes" msg="이름"  value="{{myuser_info.username}}">
+                    </li>
+
+                    <dd><span class="pointcheck">*</span> <strong>주소</strong></dd>
+                    <li>
+                        <input type="text" class="join_input" size="20" maxlength="20" id="postcode" name="postcode"  value="{{myuser_info.postcode}}" readonly="readonly" maxlength="20" />
+                        <input type="button" onclick="execDaumPostcode()" value="우편번호 찾기"><br>
+                        <input type="text" id="address1" name="address1" readonly="readonly"  value="{{myuser_info.address}}" style="width:400px; " />
+                        <input type="text" id="address2" name="address2"  value="{{myuser_info.detail_address}}" style="width:200px; "   />
+                    </li>
+
+                    <dd><span class="pointcheck">*</span> <strong>휴대전화</strong></dd>
+                    <li>
+                        <span style="color:#979797;">현재 전화번호: {{myuser_info.phone}} </span>
+                        <div class="phone1">
+                        <select name="cp1" class="cp1" id="cp1" valch="yes" msg="휴대전화">
+                            <option>010</option>
+                            <option>011</option>
+                            <option>016</option>
+                            <option>017</option>
+                            <option>018</option>
+                            <option>019</option>
+                        </select>
+                        - <input type="text" id="cp2" name="cp2" maxlength="4" msg="휴대전화" valch="yes" class="cp2" value="{{cp2}}"/>
+                        - <input type="text" id="cp3" name="cp3" maxlength="4" msg="휴대전화" valch="yes" class="cp3" value="{{cp3}}"/>
+                        </div>
+                    </li>
+                    <dd><span class="pointcheck">*</span> <strong>E-MAIL </strong></dd>
+                    <li>
+                        <div class="email_form_new" style="width:520px;">
+                            <input type="text" name="email" id="email" value="{{email1}}" valch="yes" msg="이메일"/> @ <input type="text" name="email2" value="{{email2}}" readonly="true" valch="yes" msg="이메일" id="email2"/>
+                             <select name="emailCheck" onchange="set_dir()" id="email3">
+                                 <option value="notSelected" >이메일선택</option>
+                                 <option value="naver.com">naver.com</option>
+                                 <option value="nate.com">nate.com</option>
+                                 <option value="gmail.com">gmail.com</option>
+                                 <option value="daum.net">daum.net</option>
+                                 <option value="hanmail.net">hanmail.net</option>
+                                 <option value="dreamwiz.com">dreamwiz.com</option>
+                                 <option value="hotmail.com">hotmail.com</option>
+                                 <option value="msn.com">msn.com</option>
+                                 <option value="yahoo.com">yahoo.com</option>
+                                 <option value="korea.com">korea.com</option>
+                                 <option value="direct">직접입력</option>
+                                </select>
+                            <script>
+                            function set_dir(){
+                                if($("#email2").val()=='direct'){
+                                    $("#email3").val('');
+                                    $("#email3").attr('readonly',false)
+                                } else {
+                                    $("#email3").val($("#email2").val());
+                                }
+                            }
+                            </script>
+                        </div>
+                    </li>
+                </ul>
+                </div></div>
+
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="row" style="text-align:center">
+                <div class="col-sm-6" style="text-align:center">
+                    <div class="alert alert-danger" style="text-align:center">
+                    <strong>{{ .tags }}!</strong> {{ message.message }}
+                    </div>
+                </div>
+                </div>
+            {% endfor %}
+        {% endif %}
+            <br><br>
+            <div align="center">
+                <input type="submit" id="join-submit" onclick="submit_click()" value="정보변경">
+                <button type="button" class="btn btn-light" onclick="location.href='/' ">가입취소</button>
+        </div>
+    </form>
+    <br><br>
+</article>
+
+<script>
+
+    $('#join-form').submit(function() {
+
+        var phone = $('#cp1').val()+$('#cp2').val()+$('#cp3').val();
+	    var email = $('#email').val()+"@"+$('#email2').val();
+	    var username =  $('#username').val();
+	    var password =  $('#password').val();
+	    var re_password =$('#re_password').val();
+	    var postcode =$('#postcode').val();
+	    var address1 = $('#address1').val();
+	    var address2 = $('#address2').val();
+
+	    //빈칸검사
+	    if(username == '') {
+            alert("이름을 입력해주세요.");
+            $("#username").focus();
+            return false;
+        }
+        if( $('#cp1').val() == '' ||  $('#cp2').val() == '' ||  $('#cp3').val() == ''){
+				alert("휴대전화를 정확히 입력해주세요.");
+				return false;
+		}
+		if( $('#email').val() == '' ||  $('#email2').val() == ''){
+				alert("이메일을 입력해주세요.");
+				return false;
+		}
+		if( $('#address1').val() == '' ||  $('#address2').val() == ''){
+				alert("주소를 모두 입력해주세요.");
+				return false;
+		}
+
+		//이메일 형태 검사
+		 if(isEmail(email) != true) {
+            alert("이메일을 형식에 맞게 입력해주세요.");
+            $("#email").focus();
+            return false;
+        }
+        //비밀번호 형태 검사
+         if(chkPW(password) == false) {
+            $("#password").focus();
+            return false;
+        }
+
+        if($("#ID_check_button").attr("id_check_result") == "fail") {
+            alert("id 중복체크를 해주시기 바랍니다.");
+            $("#ID").focus();
+            return false;
+        }
+
+        if(password != re_password){
+            alert("비밀번호가 틀립니다. 다시 확인해주세요.");
+            $("#re_password").focus();
+            return false;
+        }
+
+
+
+	});
+
+
+
+    function isEmail(asValue) {
+        var regExp = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
+        return regExp.test(asValue); // 형식에 맞는 경우 true 리턴
+    }
+
+    function chkPW(asValue){
+
+         var pw = asValue;
+         var num = pw.search(/[0-9]/g);
+         var eng = pw.search(/[a-z]/ig);
+         var spe = pw.search(/[`~!@@#$%^&*|₩₩₩'₩";:₩/?]/gi);
+
+         if(pw.length < 9 || pw.length > 16){
+          alert("비밀번호를 9자리 ~ 16자리 이내로 입력해주세요.");
+          return false;
+         }else if(pw.search(/\s/) != -1){
+          alert("비밀번호는 공백 없이 입력해주세요.");
+          return false;
+         }else if( (num < 0 && eng < 0) || (eng < 0 && spe < 0) || (spe < 0 && num < 0) ){
+          alert("비밀번호는 영문, 숫자, 특수문자 중 2가지 이상을 혼합하여 입력해주세요.");
+          return false;
+         }else {
+            console.log("통과");
+         }
+
+    }
+
+	function email_check_function() {
+            var id = $('#ID').val();
+            if(id == ''){
+                alert('이메일을 입력해주세요.');
+                return;
+            }
+
+            var request = $.ajax({
+                    url:'/signup/check_id?id='+id,
+                    type:'get',
+                    dataType:'json',
+                    success:function(response){
+                        if(response.result != 'success'){
+                            console.error(response.data)
+                            return;
+                        }
+                        if(response.data == 'exist'){
+                            alert("존재하는 아이디 입니다. 다시 입력해주세요.");
+                            $('#id').val('').focus();
+                            return;
+                        }else{
+                            alert("사용가능합니다.");
+                            $("#ID_check_button").attr("id_check_result", "success");
+                            return;
+                        }
+                    },
+                    error : function(xhr, error){
+                        alert("서버와의 통신에서 문제가 발생했습니다. 다시 시도해주세요.");
+                        console.error("error : " + error);
+                    }
+            });
+	}
+
+
+     //중복체크 후 input data를 수정한 경우
+    $('#ID').change(function () {
+        $("#ID_check_button").attr("id_check_result", "fail");
+    });
+
+
+    $("#id").on("propertychange change keyup paste input", function(){
+        $("#ID_check_button").attr("id_check_result", "fail");
+    });
+
+
+</script>
+
+<script
+  type="text/javascript"
+  src="https://code.jquery.com/jquery-1.12.4.min.js"
+></script>
+
+<script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
+<script>
+    function execDaumPostcode() {
+        new daum.Postcode({
+            oncomplete: function (data) {
+                // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+                // 각 주소의 노출 규칙에 따라 주소를 조합한다.
+                // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+                var fullAddr = ''; // 최종 주소 변수
+                var extraAddr = ''; // 조합형 주소 변수
+                // 사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
+                if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
+                    fullAddr = data.roadAddress;
+                } else { // 사용자가 지번 주소를 선택했을 경우(J)
+                    fullAddr = data.jibunAddress;
+                }
+                // 사용자가 선택한 주소가 도로명 타입일때 조합한다.
+                if (data.userSelectedType === 'R') {
+                    //법정동명이 있을 경우 추가한다.
+                    if (data.bname !== '') {
+                        extraAddr += data.bname;
+                    }
+                    // 건물명이 있을 경우 추가한다.
+                    if (data.buildingName !== '') {
+                        extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+                    }
+                    // 조합형주소의 유무에 따라 양쪽에 괄호를 추가하여 최종 주소를 만든다.
+                    fullAddr += (extraAddr !== '' ? ' (' + extraAddr + ')' : '');
+                }
+                // 우편번호와 주소 정보를 해당 필드에 넣는다.
+                document.getElementById('postcode').value = data.zonecode; //5자리 새우편번호 사용
+                document.getElementById('address1').value = fullAddr;
+                // 커서를 상세주소 필드로 이동한다.
+                document.getElementById('address2').focus();
+            }
+        }).open();
+    }
+</script>
+
+{% endblock %}

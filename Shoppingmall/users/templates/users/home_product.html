@@ -1,3 +1,4 @@
+{% load humanize %}
 <body>
   <div style="margin: 0 70px 0px 70px;">
     <form method="POST" enctype="multipart/form-data">
@@ -17,7 +18,7 @@
 
           <span style="font-size: 1.25em;"
             >{{product.name}}<br />
-            {{product.price}}원</span
+            {{product.price|intcomma}}원</span
           >
         </div>
 

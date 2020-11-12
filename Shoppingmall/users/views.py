@@ -12,6 +12,7 @@ from django.utils.dateformat import DateFormat
 
 
 
+
 def home(request):
     request.session.get('user')
     products = Item.objects.all().order_by('-view')
@@ -32,6 +33,8 @@ def signup(request):
 def users_signup(request):  # 회원가입 페이지를 보여주기 위한 함수
     allcategory = Category.objects.all()
     list = {'allcategory': allcategory}
+    current_user = request.session.get('user')
+
     if request.method == "GET":
         return render(request, 'users/users_signup.html', list)
 
@@ -43,13 +46,19 @@ def users_signup(request):  # 회원가입 페이지를 보여주기 위한 함�
         postcode = request.POST.get('postcode', None)
         address = request.POST.get('address1', None)
         detail_address = request.POST.get('address2', None)
-        number = request.POST.get('number', None)
-        e_mail = request.POST.get('e_mail', None)
+        cp1 = request.POST.get('cp1', None)
+        cp2 = request.POST.get('cp2', None)
+        cp3 = request.POST.get('cp3', None)
+        number = cp1+cp2+cp3
 
+        email = request.POST.get('email', None)
+        email2 = request.POST.get('email2', None)
+        e_mail = email + "@" +email2
         if not (ID and username and password and re_password and address and number and e_mail and postcode):
             messages.add_message(request, messages.INFO,
                                  '모든 값을 입력해야 합니다.')  # 첫번째, 초기지원
             # register를 요청받으면 register.html 로 응답.
+
             return render(request, 'users/signup.html', list)
 
         if password != re_password:
@@ -63,9 +72,93 @@ def users_signup(request):  # 회원가입 페이지를 보여주기 위한 함�
             user = User(userID=ID, password=make_password(password), username=username, postcode=postcode,
                         address=address, detail_address=detail_address, phone=number, e_mail=e_mail)
             user.save()
-            return redirect('/')
+            return render(request, 'users/success.html', list)
 
             # return render(request, 'home.html', res_data) #register를 요청받으면 register.html 로 응답.
+
+# 회원정보변경
+def change_user_info(request):
+    allcategory = Category.objects.all()
+    list = {'allcategory': allcategory}
+    list['notice'] = notice
+
+    if request.method == "GET":
+        myuser_id = request.session.get('user')
+        myuser_info = User.objects.get(userID=myuser_id)
+        list['myuser_info'] = myuser_info
+
+        email1, email2 = [str(i) for i in myuser_info.e_mail.split('@') ]
+        list['email1'] = email1
+        list['email2'] = email2
+
+        cp1 = myuser_info.phone[0:3]
+        cp2 = myuser_info.phone[3:7]
+        cp3 = myuser_info.phone[7:11]
+        list['cp1'] = cp1
+        list['cp2'] = cp2
+        list['cp3'] = cp3
+
+
+        return render(request, 'users/change_user_info.html', list)
+
+    elif request.method == "POST":
+        password = request.POST.get('password', None)
+        re_password = request.POST.get('re_password', None)
+        username = request.POST.get('username', None)  # 딕셔너리형태
+        postcode = request.POST.get('postcode', None)
+        address = request.POST.get('address1', None)
+        detail_address = request.POST.get('address2', None)
+        cp1 = request.POST.get('cp1', None)
+        cp2 = request.POST.get('cp2', None)
+        cp3 = request.POST.get('cp3', None)
+        number = cp1+cp2+cp3
+
+        email = request.POST.get('email', None)
+        email2 = request.POST.get('email2', None)
+        e_mail = email + "@" +email2
+
+        print(username,postcode,address,detail_address,number,e_mail )
+        if not (username and password and re_password and address and number and e_mail and postcode):
+            messages.add_message(request, messages.INFO,
+                                 '모든 값을 입력해야 합니다.')  # 첫번째, 초기지원
+            # register를 요청받으면 register.html 로 응답.
+
+            return render(request, 'users/signup.html', list)
+
+        if password != re_password:
+            # return HttpResponse('비밀번호가 다릅니다.')
+            messages.add_message(request, messages.INFO,
+                                 '비밀번호가 다릅니다.')  # 첫번째, 초기지원
+            # register를 요청받으면 register.html 로 응답.
+            return render(request, 'users_signup.html', list)
+
+        else:
+            myuser_id = request.session.get('user')
+
+            user = User.objects.get(userID=myuser_id)
+            user.password = make_password(password)
+            user.username = username
+            user.address = address
+            user.detail_address = detail_address
+            user.postcode = postcode
+            user.phone = number
+            user.e_mail = e_mail
+
+            user.save()
+            return render(request, 'users/success.html', list)
+
+@csrf_exempt
+def check_id(request):
+    try:
+        user = User.objects.get(userID=request.GET['id'])
+    except Exception as e:
+        user = None
+    result = {
+        'result':'success',
+        # 'data' : model_to_dict(user)  # console에서 확인
+        'data' : "not exist" if user is None else "exist"
+    }
+    return JsonResponse(result)
 
 
 def login(request):

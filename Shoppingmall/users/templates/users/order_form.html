@@ -73,7 +73,7 @@
         <td id = "main_product">{{product.item.name}}</td>
         <td >{{product.item.price|intcomma}}</td>
         <td >{{product.item_count}}</td>
-        <td style="font-weight: 900; font-size : 15px">{{product.item.price|mul:product.item_count}}원</td>
+        <td style="font-weight: 900; font-size : 15px">{{product.item.price|mul:product.item_count|intcomma}}원</td>
       </tr>
       {% endfor %}
     </table>
@@ -91,9 +91,9 @@
         </tr>
       </thead>
       <tr align="center">
-        <td id="price">{{checkTotal}}</td>
+        <td>{{checkTotal|intcomma}}</td>
         <td>0</td>
-        <td style="font-weight: 900; font-size : 15px" id = "final_price">{{checkTotal|add:0}}</td>
+        <td style="font-weight: 900; font-size : 15px">{{checkTotal|add:0|intcomma}}</td>
       </tr>
     </table>
   </div>
@@ -358,11 +358,7 @@
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "원";
   }
 
-  var price = document.getElementById("price").innerHTML; //html에서 price라는 id를 가진 변수의 값을 변경해준다.
-  var total = numberWithCommas(Number(price)+0);
-  document.getElementById('final_price').innerHTML = total;
-  document.getElementById('price').innerHTML = numberWithCommas(price);
-  var product = document.getElementById("main_product").innerHTML;
+  var product_name = document.getElementById("main_product").innerHTML;
   //var quantity = document.getElementById("quantity").innerHTML ;
 
 
@@ -381,16 +377,15 @@
   var receiver_email =  $("#receiver_email").val();
   var shipping_message =  $("#shipping_message").val();
   var type = $('input[name=pay_type]:checked').val();
-  var total_price = Number(price);
+  var total_price = {{checkTotal}}
 
   IMP.init("imp61600709");
-
   IMP.request_pay(
       {
         pg: "kcp", // version 1.1.0부터 지원.
         pay_method: type,
         merchant_uid: "merchant_" + new Date().getTime(),
-        name: product,
+        name: product_name,
         amount: total_price, //판매 가격+ 0
         buyer_email: buyer_email,
         buyer_name: buyer_name,
