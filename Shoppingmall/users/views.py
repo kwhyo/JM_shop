@@ -88,8 +88,8 @@ def change_user_info(request):
         list['myuser_info'] = myuser_info
 
         email1, email2 = [str(i) for i in myuser_info.e_mail.split('@') ]
-        list['email1'] = email1
-        list['email2'] = email2
+        list['email_1'] = email1
+        list['email_2'] = email2
 
         cp1 = myuser_info.phone[0:3]
         cp2 = myuser_info.phone[3:7]
@@ -114,7 +114,7 @@ def change_user_info(request):
         number = cp1+cp2+cp3
 
         email = request.POST.get('email', None)
-        email2 = request.POST.get('email2', None)
+        email2 = request.POST.get('email3', None)
         e_mail = email + "@" +email2
 
         print(username,postcode,address,detail_address,number,e_mail )
